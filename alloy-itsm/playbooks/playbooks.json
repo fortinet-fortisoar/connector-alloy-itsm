@@ -9,7 +9,8 @@
       "visible": true,
       "image": null,
       "recordTags": [
-        "alloy_dev"
+        "Alloy Software",
+        "alloy-itsm"
       ],
       "workflows": [
         {
@@ -21,7 +22,7 @@
           "name": "Get Current User Profile",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -67,7 +68,7 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "get_current_user_profile",
                 "operationTitle": "Get Current User Profile",
                 "step_variables": {
@@ -100,7 +101,7 @@
           "name": "Get Objects",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -146,7 +147,7 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "get_objects",
                 "operationTitle": "Get Objects",
                 "step_variables": {
@@ -179,7 +180,7 @@
           "name": "Get Objects Advanced Search",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -225,7 +226,7 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "get_objects_advanced",
                 "operationTitle": "Get Objects Advanced Search",
                 "step_variables": {
@@ -258,7 +259,7 @@
           "name": "Get Object By ID",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -304,7 +305,7 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "get_object_by_id",
                 "operationTitle": "Get Object By ID",
                 "step_variables": {
@@ -337,7 +338,7 @@
           "name": "Get Object Activities",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -383,7 +384,7 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "get_object_activities",
                 "operationTitle": "Get Object Activities",
                 "step_variables": {
@@ -413,10 +414,10 @@
           "collection": "/api/3/workflow_collections/59ae856d-48c5-4688-8c52-89e2a7d0bbc0",
           "triggerLimit": null,
           "description": "Retrieve object activities using POST method with advanced filtering operators (=, <>, >, >=, <, <=). Supports complex queries without URL length limitations.",
-          "name": "Get Object Activities Advanced Search",
+          "name": "Advanced Search for Object Activities",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -433,7 +434,7 @@
               "status": null,
               "arguments": {
                 "route": "fda6b6cb-8c30-48e8-a5bb-dc40575905f5",
-                "title": "Alloy ITSM: Get Object Activities Advanced Search",
+                "title": "Alloy ITSM: Advanced Search for Object Activities",
                 "resources": [
                   "alerts"
                 ],
@@ -454,7 +455,7 @@
             {
               "uuid": "d62d59b6-af7d-47bb-b549-ac0edd8a4e6f",
               "@type": "WorkflowStep",
-              "name": "Get Object Activities Advanced Search",
+              "name": "Advanced Search for Object Activities",
               "description": null,
               "status": null,
               "arguments": {
@@ -462,9 +463,9 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "get_object_activities_advanced",
-                "operationTitle": "Get Object Activities Advanced Search",
+                "operationTitle": "Advanced Search for Object Activities",
                 "step_variables": {
                   "output_data": "{{vars.result}}"
                 }
@@ -480,7 +481,7 @@
               "uuid": "deb7a67b-0b15-4d4b-92e3-f0e641fe3e15",
               "label": null,
               "isExecuted": false,
-              "name": "Start-> Get Object Activities Advanced Search",
+              "name": "Start-> Advanced Search for Object Activities",
               "sourceStep": "/api/3/workflow_steps/b2ea79de-8b88-4e62-9de1-ad5f1c9f4e1e",
               "targetStep": "/api/3/workflow_steps/d62d59b6-af7d-47bb-b549-ac0edd8a4e6f"
             }
@@ -495,7 +496,7 @@
           "name": "Get Classification Values",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -541,7 +542,7 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "get_classification_values",
                 "operationTitle": "Get Classification Values",
                 "step_variables": {
@@ -571,10 +572,10 @@
           "collection": "/api/3/workflow_collections/59ae856d-48c5-4688-8c52-89e2a7d0bbc0",
           "triggerLimit": null,
           "description": "Retrieve classification/dictionary values using POST method with advanced filtering operators (=, <>, >, >=, <, <=). Supports complex queries without URL length limitations.",
-          "name": "Get Classification Values Advanced Search",
+          "name": "Advanced Search for Classification Values",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -591,7 +592,7 @@
               "status": null,
               "arguments": {
                 "route": "0a910c59-054f-4eed-b9c2-e63b1adf8edd",
-                "title": "Alloy ITSM: Get Classification Values Advanced Search",
+                "title": "Alloy ITSM: Advanced Search for Classification Values",
                 "resources": [
                   "alerts"
                 ],
@@ -612,7 +613,7 @@
             {
               "uuid": "a3473072-44ad-42a8-8e02-7b3d179f1aca",
               "@type": "WorkflowStep",
-              "name": "Get Classification Values Advanced Search",
+              "name": "Advanced Search for Classification Values",
               "description": null,
               "status": null,
               "arguments": {
@@ -620,9 +621,9 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "get_classification_values_advanced",
-                "operationTitle": "Get Classification Values Advanced Search",
+                "operationTitle": "Advanced Search for Classification Values",
                 "step_variables": {
                   "output_data": "{{vars.result}}"
                 }
@@ -638,7 +639,7 @@
               "uuid": "16cf5a1d-b1d3-4cf3-be05-52d5f832bb7d",
               "label": null,
               "isExecuted": false,
-              "name": "Start-> Get Classification Values Advanced Search",
+              "name": "Start-> Advanced Search for Classification Values",
               "sourceStep": "/api/3/workflow_steps/8e79f676-1a93-415b-b9c0-5a084e2d934a",
               "targetStep": "/api/3/workflow_steps/a3473072-44ad-42a8-8e02-7b3d179f1aca"
             }
@@ -653,7 +654,7 @@
           "name": "Create Object",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -701,7 +702,7 @@
                   "action_id": "2550"
                 },
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "create_object",
                 "operationTitle": "Create Object",
                 "step_variables": {
@@ -734,7 +735,7 @@
           "name": "Update Object",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -782,7 +783,7 @@
                   "action_id": "2551"
                 },
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "run_step_action",
                 "operationTitle": "Update Object",
                 "step_variables": {
@@ -815,7 +816,7 @@
           "name": "Check Step Action Availability",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -861,7 +862,7 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "check_step_action_availability",
                 "operationTitle": "Check Step Action Availability",
                 "step_variables": {
@@ -894,7 +895,7 @@
           "name": "List Object Attachments",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -940,7 +941,7 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "list_object_attachments",
                 "operationTitle": "List Object Attachments",
                 "step_variables": {
@@ -973,7 +974,7 @@
           "name": "Get Attachment Content",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -1019,7 +1020,7 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "get_attachment_content",
                 "operationTitle": "Get Attachment Content",
                 "step_variables": {
@@ -1052,7 +1053,7 @@
           "name": "Download Attachment",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -1100,7 +1101,7 @@
                   "skip_fortisoar_upload": false
                 },
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "download_attachment",
                 "operationTitle": "Download Attachment",
                 "step_variables": {
@@ -1133,7 +1134,7 @@
           "name": "Add Attachments",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -1181,7 +1182,7 @@
                   "path": "Attachment IRI"
                 },
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "add_attachments",
                 "operationTitle": "Add Attachments",
                 "step_variables": {
@@ -1214,7 +1215,7 @@
           "name": "Remove Attachment",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -1260,7 +1261,7 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "remove_attachment",
                 "operationTitle": "Remove Attachment",
                 "step_variables": {
@@ -1293,7 +1294,7 @@
           "name": "Update Attachment Description",
           "tag": "#Alloy ITSM",
           "recordTags": [
-            "alloy_dev"
+            "alloy-itsm"
           ],
           "isActive": false,
           "debug": false,
@@ -1339,7 +1340,7 @@
                 "config": "''",
                 "params": [],
                 "version": "1.0.0",
-                "connector": "alloy_dev",
+                "connector": "alloy-itsm",
                 "operation": "update_attachment_description",
                 "operationTitle": "Update Attachment Description",
                 "step_variables": {

@@ -1,0 +1,1473 @@
+{
+  "name": "alloy-itsm",
+  "version": "1.0.0",
+  "label": "Alloy ITSM",
+  "description": "Alloy ITSM is an IT Service Management (ITSM) solution designed to help organizations manage and streamline their IT services and operations. This connector is designed to manage and automate ticket-based operations.",
+  "publisher": "Fortinet",
+  "contributor": "amey-spryiq",
+  "cs_approved": false,
+  "cs_compatible": true,
+  "help_online": "https://github.com/fortinet-fortisoar/connector-alloy-itsm/blob/release/1.0.0/docs/AlloyITSMConnectorDoc.md",
+  "icon_small_name": "small.png",
+  "icon_large_name": "large.png",
+  "category": [
+    "Ticket Management"
+  ],
+  "configuration": {
+    "fields": [
+      {
+        "title": "Server URL",
+        "type": "text",
+        "name": "server_url",
+        "required": true,
+        "visible": true,
+        "editable": true,
+        "tooltip": "Specify the URL of the Alloy Navigator Express server to connect and perform automated operations. (e.g., https://navigator.example.com)",
+        "description": "Specify the URL of the Alloy Navigator Express server to connect and perform automated operations."
+      },
+      {
+        "title": "Get Access Token",
+        "type": "select",
+        "name": "auth_type",
+        "required": true,
+        "visible": true,
+        "editable": true,
+        "value": "Application Account",
+        "description": "Select the account type from the following options: \"Application Account\" or \"Technician Account.\" By default, \"Application Account\" is selected.",
+        "tooltip": "Select the account type from the following options: \"Application Account\" or \"Technician Account.\" By default, \"Application Account\" is selected.",
+        "options": [
+          "Application Account",
+          "Technician Account"
+        ],
+        "onchange": {
+          "Application Account": [
+            {
+              "title": "Client ID",
+              "name": "client_id",
+              "type": "text",
+              "description": "Specify the client ID retrieved from the Alloy Navigator Express application settings.",
+              "tooltip": "Specify the client ID retrieved from the Alloy Navigator Express application settings.",
+              "required": true,
+              "editable": true,
+              "visible": true
+            },
+            {
+              "title": "Client Secret",
+              "name": "client_secret",
+              "type": "password",
+              "description": "Specify the client secret retrieved from the Alloy Navigator Express application settings.",
+              "tooltip": "Specify the client secret retrieved from the Alloy Navigator Express application settings.",
+              "required": true,
+              "editable": true,
+              "visible": true
+            }
+          ],
+          "Technician Account": [
+            {
+              "title": "Username",
+              "name": "username",
+              "type": "text",
+              "description": "Specify the username for the Alloy Navigator Express technician account.",
+              "tooltip": "Specify the username for the Alloy Navigator Express technician account.",
+              "required": true,
+              "editable": true,
+              "visible": true
+            },
+            {
+              "title": "Password",
+              "name": "password",
+              "type": "password",
+              "description": "Specify the password for the Alloy Navigator Express technician account.",
+              "tooltip": "Specify the password for the Alloy Navigator Express technician account.",
+              "required": true,
+              "editable": true,
+              "visible": true
+            }
+          ]
+        }
+      },
+      {
+        "title": "Verify SSL",
+        "type": "checkbox",
+        "name": "verify_ssl",
+        "required": false,
+        "visible": true,
+        "editable": true,
+        "value": true,
+        "tooltip": "Specifies whether the SSL certificate for the server is to be verified. By default, this option is selected, i.e., set to true.",
+        "description": "Specifies whether the SSL certificate for the server is to be verified. By default, this option is selected, i.e., set to true."
+      }
+    ]
+  },
+  "operations": [
+    {
+      "operation": "get_current_user_profile",
+      "title": "Get Current User Profile",
+      "description": "Retrieve details about the currently logged-in user or technician from Alloy Navigator Express.",
+      "category": "investigation",
+      "annotation": "get_current_user_profile",
+      "enabled": true,
+      "parameters": [],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Items": [
+            {
+              "name": "",
+              "caption": "",
+              "value": ""
+            }
+          ]
+        },
+        "user_info": {
+          "id": "",
+          "first_name": "",
+          "last_name": "",
+          "full_name": "",
+          "organization": "",
+          "is_technician": "",
+          "available_now": "",
+          "address": "",
+          "gender": ""
+        }
+      }
+    },
+    {
+      "operation": "get_objects",
+      "title": "Get Objects",
+      "description": "Retrieve objects from the selected Alloy Navigator class while applying filters, sort criteria, and pagination parameters.",
+      "category": "investigation",
+      "annotation": "get_objects",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Class",
+          "description": "Specify the name of the object class from which you want to retrieve objects in Alloy Navigator Express. Note: For the correct spelling of Alloy Navigator Express object class names, see https://docs.alloysoftware.com/alloynavigatorexpress/docs/api-userguide/api-userguide/supported-alloy-navigator-object-classes.htm#supported-alloy-navigator-express-object-classes",
+          "type": "text",
+          "name": "object_class",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the name of the object class from which you want to retrieve objects in Alloy Navigator Express. For e.g. Incidents, Computers, Consumables, etc.",
+          "placeholder": "For e.g. Incidents, Computers, Consumables, etc."
+        },
+        {
+          "title": "Fields",
+          "description": "Specify a comma-separated list of field names to include in the output. If omitted, all available fields will be returned.",
+          "type": "text",
+          "name": "par_fields",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify a comma-separated list of field names to include in the output. If omitted, all available fields will be returned. For e.g. ID, Product_Name, Manufacturer, etc.",
+          "placeholder": "For e.g. ID, Product_Name, Manufacturer, etc"
+        },
+        {
+          "title": "Search Text",
+          "description": "Specify the search string used to filter the retrieved objects. Partial text fragments or keywords are allowed. Note: The search is performed on commonly used text fields that store key information, and each object class has its own set of these fields. For details: https://docs.alloysoftware.com/alloynavigatorexpress/help/webportal/content/common-functions/search/frequently-used-text-fields.htm",
+          "type": "text",
+          "name": "par_search_text",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the search string used to filter the retrieved objects. Partial text fragments or keywords are allowed. Note: The search is performed on commonly used text fields that store key information, and each object class has its own set of these fields."
+        },
+        {
+          "title": "Filters",
+          "description": "Provide additional filtering criteria as a JSON object to refine the object search.",
+          "type": "json",
+          "name": "filters",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Provide additional filtering criteria as a JSON object to refine the object search. (e.g., {\"Priority\":\"High\",\"Status\":\"Open\"})"
+        },
+        {
+          "title": "Sort By",
+          "description": "Select the sorting direction. You may use only one parameter either \"Sort Ascending\" or \"Sort Descending\" parameter.",
+          "type": "select",
+          "name": "sort_by",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Select the sorting direction. You may use only one parameter either \"Sort Ascending\" or \"Sort Descending\" parameter.",
+          "options": [
+            "Sort Ascending",
+            "Sort Descending"
+          ],
+          "onchange": {
+            "Sort Ascending": [
+              {
+                "title": "Sort Ascending",
+                "description": "Specify the comma-separated fields to be used for ascending sorting.",
+                "type": "text",
+                "name": "par_sort_asc",
+                "required": false,
+                "visible": true,
+                "editable": true,
+                "tooltip": "Specify the comma-separated fields to be used for ascending sorting."
+              }
+            ],
+            "Sort Descending": [
+              {
+                "title": "Sort Descending",
+                "description": "Specify the comma-separated fields to be used for descending sorting.",
+                "type": "text",
+                "name": "par_sort_desc",
+                "required": false,
+                "visible": true,
+                "editable": true,
+                "tooltip": "Specify the comma-separated fields to be used for descending sorting."
+              }
+            ]
+          }
+        },
+        {
+          "title": "Limit",
+          "description": "Specifies how many records should be returned. Use with the \"Offset\" parameter to enable pagination.",
+          "type": "integer",
+          "name": "par_limit",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records should be returned. Use with the \"Offset\" parameter to enable pagination."
+        },
+        {
+          "title": "Offset",
+          "description": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination.",
+          "type": "integer",
+          "name": "par_offset",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination."
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Fields": [
+            {
+              "Name": "",
+              "DataType": ""
+            }
+          ],
+          "Data": ""
+        }
+      }
+    },
+    {
+      "operation": "get_objects_advanced",
+      "title": "Get Objects Advanced Search",
+      "description": "Retrieve Alloy Navigator objects using advanced filtering operators. Supports complex queries without URL length restrictions.",
+      "category": "investigation",
+      "annotation": "get_objects_advanced",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Class",
+          "description": "Specify the name of the object class from which you want to retrieve objects in Alloy Navigator Express. Note: For the correct spelling of Alloy Navigator Express object class names, see https://docs.alloysoftware.com/alloynavigatorexpress/docs/api-userguide/api-userguide/supported-alloy-navigator-object-classes.htm#supported-alloy-navigator-express-object-classes",
+          "type": "text",
+          "name": "object_class",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the name of the object class from which you want to retrieve objects in Alloy Navigator Express. For e.g. Incidents, Computers, Consumables, etc.",
+          "placeholder": "For e.g. Incidents, Computers, Consumables, etc."
+        },
+        {
+          "title": "Fields",
+          "description": "Specify a comma-separated list of field names to include in the output. If omitted, all available fields will be returned.",
+          "type": "text",
+          "name": "fields",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify a comma-separated list of field names to include in the output. If omitted, all available fields will be returned. (e.g., [\"OID\",\"Invoice_Number\",\"Original_Cost\"])"
+        },
+        {
+          "title": "Filters",
+          "description": "Provide additional filtering criteria as a JSON object to refine the object advanced search. (e.g., [{\"name\":\"Original_Cost\",\"value\":\"100\",\"operation\":\">\"}])",
+          "type": "json",
+          "name": "filters",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Provide additional filtering criteria as a JSON object to refine the object advanced search. (e.g., [{\"name\":\"Original_Cost\",\"value\":\"100\",\"operation\":\">\"}])"
+        },
+        {
+          "title": "Search Text",
+          "description": "Specify the search string used to filter the retrieved objects. Partial text fragments or keywords are allowed. Note: The search is performed on commonly used text fields that store key information, and each object class has its own set of these fields. For details: https://docs.alloysoftware.com/alloynavigatorexpress/help/webportal/content/common-functions/search/frequently-used-text-fields.htm",
+          "type": "text",
+          "name": "searchText",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the search string used to filter the retrieved objects. Partial text fragments or keywords are allowed. Note: The search is performed on commonly used text fields that store key information, and each object class has its own set of these fields."
+        },
+        {
+          "title": "Sort",
+          "description": "Specifies the field on which the sorting operation is based. Defines the sorting order, either ascending (asc) or descending (desc). (e.g., [{\"property\":\"OID\",\"direction\":\"asc\"}])",
+          "type": "json",
+          "name": "sort",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies the field on which the sorting operation is based. Defines the sorting order, either ascending (asc) or descending (desc)."
+        },
+        {
+          "title": "Limit",
+          "description": "Specifies how many records should be returned. Use with the \"Offset\" parameter to enable pagination.",
+          "type": "integer",
+          "name": "limit",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records should be returned. Use with the \"Offset\" parameter to enable pagination."
+        },
+        {
+          "title": "Offset",
+          "description": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination.",
+          "type": "integer",
+          "name": "offset",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination."
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Fields": [
+            {
+              "Name": "",
+              "DataType": ""
+            }
+          ],
+          "Data": ""
+        }
+      }
+    },
+    {
+      "operation": "get_object_by_id",
+      "title": "Get Object By ID",
+      "description": "Retrieve all fields of a specific object by using its OID or database ID.",
+      "category": "investigation",
+      "annotation": "get_object_by_id",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Identifier (OID or ID)",
+          "description": "Specify the object identifier to retrieve details from Alloy Navigator Express. Object identifier - can be OID (e.g., T000002) or database GUID (e.g., {EB6D7E24-59CA-4532-B365-451724A7B880})",
+          "type": "text",
+          "name": "oid",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the object identifier to retrieve details from Alloy Navigator Express. Object identifier - can be OID (e.g., T000002) or database GUID (e.g., {EB6D7E24-59CA-4532-B365-451724A7B880})"
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Items": [
+            {
+              "name": "",
+              "caption": "",
+              "value": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "operation": "get_object_activities",
+      "title": "Get Object Activities",
+      "description": "Retrieve the activity or history records for a specific Alloy Navigator object using the filter parameters you provide.",
+      "category": "investigation",
+      "annotation": "get_object_activities",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Identifier (OID)",
+          "description": "Specify the object identifier to retrieve object activities details from Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, COMP000123 for computers)",
+          "type": "text",
+          "name": "oid",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the object identifier to retrieve object activities details from Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, COMP000123 for computers)"
+        },
+        {
+          "title": "Activity Fields",
+          "description": "Provide a comma-separated list of activity field names to include in the output. If omitted, all available fields will be returned. For e.g., Num,Details,Activity,Created_Date",
+          "type": "text",
+          "name": "par_fields",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Provide a comma-separated list of activity field names to include in the output. If omitted, all available fields will be returned. For e.g., Num,Details,Activity,Created_Date"
+        },
+        {
+          "title": "Filters",
+          "description": "Provide additional filtering criteria as a JSON object to refine the object search. For e.g., {\"Activity\":\"New Technical Issue was created\"}",
+          "type": "json",
+          "name": "filters",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Provide additional filtering criteria as a JSON object to refine the object search. For e.g., {\"Activity\":\"New Technical Issue was created\"}"
+        },
+        {
+          "title": "Sort By",
+          "description": "Select the sorting direction. You may use only one parameter either \"Sort Ascending\" or \"Sort Descending\" parameter.",
+          "type": "select",
+          "name": "sort_by",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Select the sorting direction. You may use only one parameter either \"Sort Ascending\" or \"Sort Descending\" parameter.",
+          "options": [
+            "Sort Ascending",
+            "Sort Descending"
+          ],
+          "onchange": {
+            "Sort Ascending": [
+              {
+                "title": "Sort Ascending",
+                "description": "Specify the comma-separated fields to be used for ascending sorting.",
+                "type": "text",
+                "name": "par_sort_asc",
+                "required": false,
+                "visible": true,
+                "editable": true,
+                "tooltip": "Specify the comma-separated fields to be used for ascending sorting."
+              }
+            ],
+            "Sort Descending": [
+              {
+                "title": "Sort Descending",
+                "description": "Specify the comma-separated fields to be used for descending sorting.",
+                "type": "text",
+                "name": "par_sort_desc",
+                "required": false,
+                "visible": true,
+                "editable": true,
+                "tooltip": "Specify the comma-separated fields to be used for descending sorting."
+              }
+            ]
+          }
+        },
+        {
+          "title": "Limit",
+          "description": "Specifies how many records should be returned. Use with the \"Offset\" parameter to enable pagination.",
+          "type": "integer",
+          "name": "par_limit",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records should be returned. Use with the \"Offset\" parameter to enable pagination."
+        },
+        {
+          "title": "Offset",
+          "description": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination.",
+          "type": "integer",
+          "name": "par_offset",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination."
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Fields": [
+            {
+              "Name": "",
+              "DataType": ""
+            }
+          ],
+          "Data": ""
+        }
+      }
+    },
+    {
+      "operation": "get_object_activities_advanced",
+      "title": "Advanced Search for Object Activities",
+      "description": "Retrieve object activities using POST method with advanced filtering operators (=, <>, >, >=, <, <=). Supports complex queries without URL length limitations.",
+      "category": "investigation",
+      "annotation": "get_object_activities_advanced",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Identifier (OID)",
+          "description": "Specify the object identifier to retrieve details from Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, COMP000123 for computers)",
+          "type": "text",
+          "name": "oid",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the object identifier to retrieve details from Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, COMP000123 for computers)"
+        },
+        {
+          "title": "Activity Fields",
+          "description": "Provide a comma-separated list of activity field names to include in the output. If omitted, all available fields will be returned. For e.g., [\"Num\",\"Details\",\"Activity\",\"Created_Date\"]",
+          "type": "text",
+          "name": "fields",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Provide a comma-separated list of activity field names to include in the output. If omitted, all available fields will be returned. For e.g., [\"Num\",\"Details\",\"Activity\",\"Created_Date\"]"
+        },
+        {
+          "title": "Filters",
+          "description": "Provide additional filtering criteria as a JSON object to refine the object search. For e.g., [{\"name\":\"Created_Date\",\"value\":\"2019-12\",\"operation\":\"=\"}]",
+          "type": "json",
+          "name": "filters",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Provide additional filtering criteria as a JSON object to refine the object search. For e.g., [{\"name\":\"Created_Date\",\"value\":\"2019-12\",\"operation\":\"=\"}]"
+        },
+        {
+          "title": "Sort",
+          "description": "Specifies the field on which the sorting operation is based. Defines the sorting order, either ascending (asc) or descending (desc). (e.g., [{\"property\":\"Num\",\"direction\":\"desc\"}])",
+          "type": "json",
+          "name": "sort",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies the field on which the sorting operation is based. Defines the sorting order, either ascending (asc) or descending (desc)."
+        },
+        {
+          "title": "Limit",
+          "description": "Specifies how many records should be returned. Use with the \"Offset\" parameter to enable pagination.",
+          "type": "integer",
+          "name": "limit",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records should be returned. Use with the \"Offset\" parameter to enable pagination."
+        },
+        {
+          "title": "Offset",
+          "description": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination.",
+          "type": "integer",
+          "name": "offset",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination."
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Fields": [
+            {
+              "Name": "",
+              "DataType": ""
+            }
+          ],
+          "Data": ""
+        }
+      }
+    },
+    {
+      "operation": "get_classification_values",
+      "title": "Get Classification Values",
+      "description": "Retrieve classification or dictionary values for Alloy Navigator objects using the filter parameters you’ve provided.",
+      "category": "investigation",
+      "annotation": "get_classification_values",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Class",
+          "description": "Specify the name of the object class from which you want to retrieve classification values in Alloy Navigator Express. Note: For the correct spelling of Alloy Navigator Express object class names, see https://docs.alloysoftware.com/alloynavigatorexpress/docs/api-userguide/api-userguide/supported-alloy-navigator-object-classes.htm#supported-alloy-navigator-express-object-classes",
+          "type": "text",
+          "name": "par_objectClass",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the name of the object class from which you want to retrieve classification values in Alloy Navigator Express. For e.g. Incidents, Computers, Assets, etc.",
+          "placeholder": "For e.g. Incidents, Computers, Assets, etc."
+        },
+        {
+          "title": "Reference Field",
+          "description": "Specify a comma-separated list of reference field names to include in the output. For e.g. Status, Types, Priority, Category",
+          "type": "text",
+          "name": "par_refField",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify a comma-separated list of reference field names to include in the output.",
+          "placeholder": "For e.g. Status, Types, Priority, Category"
+        },
+        {
+          "title": "Filters",
+          "description": "Provide additional filtering criteria as a JSON object to refine the classification values. (e.g., {\"Rank\":\"3\"})",
+          "type": "json",
+          "name": "filters",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Provide additional filtering criteria as a JSON object to refine the classification values. (e.g., {\"Rank\":\"3\"})"
+        },
+        {
+          "title": "Fields",
+          "description": "Specify a comma-separated list of field names to include in the output. If omitted, all available fields will be returned. For e.g., Rank,Status,Description, etc.",
+          "type": "text",
+          "name": "par_fields",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify a comma-separated list of field names to include in the output. If omitted, all available fields will be returned.",
+          "placeholder": "For e.g. Rank,Status,Description, etc."
+        },
+        {
+          "title": "Sort By",
+          "description": "Select the sorting direction. You may use only one parameter either \"Sort Ascending\" or \"Sort Descending\" parameter.",
+          "type": "select",
+          "name": "sort_by",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Select the sorting direction. You may use only one parameter either \"Sort Ascending\" or \"Sort Descending\" parameter.",
+          "options": [
+            "Sort Ascending",
+            "Sort Descending"
+          ],
+          "onchange": {
+            "Sort Ascending": [
+              {
+                "title": "Sort Ascending",
+                "description": "Specify the comma-separated fields to be used for ascending sorting.",
+                "type": "text",
+                "name": "par_sort_asc",
+                "required": false,
+                "visible": true,
+                "editable": true,
+                "tooltip": "Specify the comma-separated fields to be used for ascending sorting."
+              }
+            ],
+            "Sort Descending": [
+              {
+                "title": "Sort Descending",
+                "description": "Specify the comma-separated fields to be used for descending sorting.",
+                "type": "text",
+                "name": "par_sort_desc",
+                "required": false,
+                "visible": true,
+                "editable": true,
+                "tooltip": "Specify the comma-separated fields to be used for descending sorting."
+              }
+            ]
+          }
+        },
+        {
+          "title": "Limit",
+          "description": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination.",
+          "type": "integer",
+          "name": "par_limit",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination."
+        },
+        {
+          "title": "Offset",
+          "description": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination.",
+          "type": "integer",
+          "name": "par_offset",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination."
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Fields": [
+            {
+              "Name": "",
+              "DataType": ""
+            }
+          ],
+          "Data": ""
+        }
+      }
+    },
+    {
+      "operation": "get_classification_values_advanced",
+      "title": "Advanced Search for Classification Values",
+      "description": "Retrieve classification/dictionary values using POST method with advanced filtering operators (=, <>, >, >=, <, <=). Supports complex queries without URL length limitations.",
+      "category": "investigation",
+      "annotation": "get_classification_values_advanced",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Class",
+          "description": "Specify the name of the object class from which you want to retrieve classification values in Alloy Navigator Express. Note: For the correct spelling of Alloy Navigator Express object class names, see https://docs.alloysoftware.com/alloynavigatorexpress/docs/api-userguide/api-userguide/supported-alloy-navigator-object-classes.htm#supported-alloy-navigator-express-object-classes",
+          "type": "text",
+          "name": "objectClass",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the name of the object class from which you want to retrieve classification values in Alloy Navigator Express. For e.g. Incidents, Computers, Assets, etc.",
+          "placeholder": "For e.g. Incidents, Computers, Assets, etc."
+        },
+        {
+          "title": "Reference Field",
+          "description": "Specify a comma-separated list of reference field names to include in the output. For e.g. Status, Types, Priority, Category",
+          "type": "text",
+          "name": "refField",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify a comma-separated list of reference field names to include in the output.",
+          "placeholder": "For e.g. Status, Types, Priority, Category"
+        },
+        {
+          "title": "Fields",
+          "description": "Specify a comma-separated list of field names to include in the output. If omitted, all available fields will be returned. For e.g., [\"Rank\",\"Status\",\"Description\"].",
+          "type": "text",
+          "name": "fields",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify a comma-separated list of field names to include in the output. If omitted, all available fields will be returned. For e.g., [\"Rank\",\"Status\",\"Description\"]."
+        },
+        {
+          "title": "Filters",
+          "description": "Provide additional filtering criteria as a JSON object to refine the classification values. (e.g., [{\"name\":\"Rank\",\"value\":\"1\",\"operation\":\">\"}])",
+          "type": "json",
+          "name": "filters",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Provide additional filtering criteria as a JSON object to refine the classification values. (e.g., [{\"name\":\"Rank\",\"value\":\"1\",\"operation\":\">\"}])"
+        },
+        {
+          "title": "Sort",
+          "description": "Specifies the field on which the sorting operation is based. Defines the sorting order, either ascending (asc) or descending (desc). (e.g., [{\"property\":\"Rank\",\"direction\":\"asc\"}])",
+          "type": "json",
+          "name": "sort",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies the field on which the sorting operation is based. Defines the sorting order, either ascending (asc) or descending (desc). (e.g., [{\"property\":\"Rank\",\"direction\":\"asc\"}])"
+        },
+        {
+          "title": "Limit",
+          "description": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination.",
+          "type": "integer",
+          "name": "limit",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination."
+        },
+        {
+          "title": "Offset",
+          "description": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination.",
+          "type": "integer",
+          "name": "offset",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination."
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Fields": [
+            {
+              "Name": "",
+              "DataType": ""
+            }
+          ],
+          "Data": ""
+        }
+      }
+    },
+    {
+      "operation": "create_object",
+      "title": "Create Object",
+      "description": "Creates a new Alloy Navigator object record using a workflow Create Action. This action is not supported for Service Requests; use the Submit Request action for Service Catalog Items instead.",
+      "category": "investigation",
+      "annotation": "create_object",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Action ID",
+          "description": "Specify the ID of the Create Action you want to use to create the object in Alloy Navigator Express.",
+          "type": "integer",
+          "name": "action_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the Create Action you want to use to create the object in Alloy Navigator Express. NOTE: You can find the Create Action ID and a list of fields for a particular object class in the Settings App: Customization > [Module]> [Object Class] > Workflow > Templates."
+        },
+        {
+          "title": "Summary",
+          "description": "Specify the summary to use when creating the object in Alloy Navigator Express.",
+          "type": "text",
+          "name": "summary",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the summary to use when creating the object in Alloy Navigator Express."
+        },
+        {
+          "title": "Description",
+          "description": "Specify the description to use when creating the object in Alloy Navigator Express.",
+          "type": "textarea",
+          "name": "description",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the description to use when creating the object in Alloy Navigator Express. Note: It supports HTML"
+        },
+        {
+          "title": "Category",
+          "description": "Specify the category to use when creating the object in Alloy Navigator Express.",
+          "type": "text",
+          "name": "category",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the category to use when creating the object in Alloy Navigator Express."
+        },
+        {
+          "title": "Requester",
+          "description": "Specify the requester name or identifier to use when creating the object in Alloy Navigator Express.",
+          "type": "text",
+          "name": "requester",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the requester name or identifier to use when creating the object in Alloy Navigator Express."
+        },
+        {
+          "title": "Urgency",
+          "description": "Select the urgency level to use when creating the object in Alloy Navigator Express. You can choose from the available options such as \"1 - Immediate\", \"2 - Moderate\", or \"3 - No Rush\".",
+          "type": "select",
+          "name": "urgency",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Select the urgency level to use when creating the object in Alloy Navigator Express. You can choose from the available options such as \"1 - Immediate\", \"2 - Moderate\", or \"3 - No Rush\".",
+          "options": [
+            "1 - Immediate",
+            "2 - Moderate",
+            "3 - No Rush"
+          ]
+        },
+        {
+          "title": "Impact",
+          "description": "Select the impact to use when creating the object in Alloy Navigator Express. You can choose from the available options such as \"1 - Entire Location\", \"2 - Multiple People\", or \"3 - Single Person\".",
+          "type": "select",
+          "name": "impact",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Select the impact to use when creating the object in Alloy Navigator Express. You can choose from the available options such as \"1 - Entire Location\", \"2 - Multiple People\", or \"3 - Single Person\".",
+          "options": [
+            "1 - Entire Location",
+            "2 - Multiple People",
+            "3 - Single Person"
+          ]
+        },
+        {
+          "title": "Additional Fields",
+          "description": "Additional properties (fields), in the JSON format, based on which you want to the object in Alloy Navigator Express.",
+          "type": "json",
+          "name": "fields",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Additional properties (fields), in the JSON format, based on which you want to the object in Alloy Navigator Express. (e.g., {\"CustomField1\":\"Value1\"})"
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Succeed": "",
+          "ObjectID": "",
+          "ObjectOID": ""
+        }
+      }
+    },
+    {
+      "operation": "run_step_action",
+      "title": "Update Object",
+      "description": "Run a workflow Step Action on an Alloy Navigator object to update fields or trigger workflows. Cannot be used for Software Catalog and Stock Room objects.",
+      "category": "investigation",
+      "annotation": "run_step_action",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Identifier (OID)",
+          "description": "Specify the object identifier to update object details in Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, V000006 for vendors, COMP000123 for computers)",
+          "type": "text",
+          "name": "oid",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the object identifier to update object details in Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, V000006 for vendors, COMP000123 for computers)"
+        },
+        {
+          "title": "Step Action ID",
+          "description": "Specify the ID of the step action you want to use to update the object in Alloy Navigator Express.",
+          "type": "integer",
+          "name": "action_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the step action you want to use to update the object in Alloy Navigator Express. Note: Found in Settings App: Workflow > Actions > Step Actions"
+        },
+        {
+          "title": "Summary",
+          "description": "Specify the summary to use when updating the object in Alloy Navigator Express.",
+          "type": "text",
+          "name": "summary",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the summary to use when updating the object in Alloy Navigator Express."
+        },
+        {
+          "title": "Description",
+          "description": "Specify the description to use when updating the object in Alloy Navigator Express.",
+          "type": "textarea",
+          "name": "description",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the description to use when updating the object in Alloy Navigator Express."
+        },
+        {
+          "title": "Category",
+          "description": "Specify the category to use when updating the object in Alloy Navigator Express.",
+          "type": "text",
+          "name": "category",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the category to use when updating the object in Alloy Navigator Express."
+        },
+        {
+          "title": "Requester",
+          "description": "Specify the requester name or identifier to use when updating the object in Alloy Navigator Express.",
+          "type": "text",
+          "name": "requester",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the requester name or identifier to use when updating the object in Alloy Navigator Express."
+        },
+        {
+          "title": "Urgency",
+          "description": "Select the urgency level to use when updating the object in Alloy Navigator Express. You can choose from the available options such as \"1 - Immediate\", \"2 - Moderate\", or \"3 - No Rush\".",
+          "type": "select",
+          "name": "urgency",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Select the urgency level to use when updating the object in Alloy Navigator Express. You can choose from the available options such as \"1 - Immediate\", \"2 - Moderate\", or \"3 - No Rush\".",
+          "options": [
+            "1 - Immediate",
+            "2 - Moderate",
+            "3 - No Rush"
+          ]
+        },
+        {
+          "title": "Impact",
+          "description": "Select the impact to use when updating the object in Alloy Navigator Express. You can choose from the available options such as \"1 - Entire Location\", \"2 - Multiple People\", or \"3 - Single Person\".",
+          "type": "select",
+          "name": "impact",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Select the impact to use when updating the object in Alloy Navigator Express. You can choose from the available options such as \"1 - Entire Location\", \"2 - Multiple People\", or \"3 - Single Person\".",
+          "options": [
+            "1 - Entire Location",
+            "2 - Multiple People",
+            "3 - Single Person"
+          ]
+        },
+        {
+          "title": "Additional Fields",
+          "description": "Additional properties (fields), in the JSON format, based on which you want to the object in Alloy Navigator Express.",
+          "type": "json",
+          "name": "fields",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Additional properties (fields), in the JSON format, based on which you want to the object in Alloy Navigator Express. (e.g., {\"Activity.Time_Spent\":84,\"Comment\":\"Updated via API\"})"
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Succeed": "",
+          "ObjectID": "",
+          "ObjectOID": ""
+        }
+      }
+    },
+    {
+      "operation": "check_step_action_availability",
+      "title": "Check Step Action Availability",
+      "description": "Check whether the workflow Step Action is available for the object according to the parameter you have entered.",
+      "category": "investigation",
+      "annotation": "check_step_action_availability",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Identifier (OID)",
+          "description": "Specify the object identifier to check the action availability in Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, V000006 for vendors, COMP000123 for computers)",
+          "type": "text",
+          "name": "oid",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the object identifier to check the action availability in Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, V000006 for vendors, COMP000123 for computers)"
+        },
+        {
+          "title": "Step Action ID",
+          "description": "Specify the ID of the step action to check the action availability in Alloy Navigator Express.",
+          "type": "integer",
+          "name": "action_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the step action to check the action availability in Alloy Navigator Express. Note: Found in Settings App: Workflow > Actions > Step Actions"
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Result": ""
+        },
+        "action_available": "",
+        "availability_message": ""
+      }
+    },
+    {
+      "operation": "list_object_attachments",
+      "title": "List Object Attachments",
+      "description": "Retrieve a list of attachments for a specific Alloy Navigator object using the object ID and any additional filter parameters you have specified.",
+      "category": "investigation",
+      "annotation": "list_object_attachments",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Identifier (OID)",
+          "description": "Specify the object identifier to retrieve object attachments from Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, or GUID like {6D978EE7-...})",
+          "type": "text",
+          "name": "oid",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the object identifier to retrieve object attachments from Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, or GUID like {6D978EE7-...})"
+        },
+        {
+          "title": "Fields",
+          "description": "Specify a comma-separated list of attachment field names to include in the output. If omitted, all available fields will be returned. For e.g. ID,Name,Created_Date.",
+          "type": "text",
+          "name": "par_fields",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify a comma-separated list of attachment field names to include in the output. If omitted, all available fields will be returned.",
+          "placeholder": "For e.g. ID,Name,Created_Date"
+        },
+        {
+          "title": "Filters",
+          "description": "Provide additional filtering criteria as a JSON object to refine the object attachment. For e.g., {\"Type\":\"File\"})",
+          "type": "json",
+          "name": "filters",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Provide additional filtering criteria as a JSON object to refine the object attachment. For e.g., {\"Type\":\"File\"})"
+        },
+        {
+          "title": "Sort By",
+          "description": "Select the sorting direction. You may use only one parameter either \"Sort Ascending\" or \"Sort Descending\" parameter.",
+          "type": "select",
+          "name": "sort_by",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Select the sorting direction. You may use only one parameter either \"Sort Ascending\" or \"Sort Descending\" parameter.",
+          "options": [
+            "Sort Ascending",
+            "Sort Descending"
+          ],
+          "onchange": {
+            "Sort Ascending": [
+              {
+                "title": "Sort Ascending",
+                "description": "Specify the comma-separated fields to be used for ascending sorting.",
+                "type": "text",
+                "name": "par_sort_asc",
+                "required": false,
+                "visible": true,
+                "editable": true,
+                "tooltip": "Specify the comma-separated fields to be used for ascending sorting."
+              }
+            ],
+            "Sort Descending": [
+              {
+                "title": "Sort Descending",
+                "description": "Specify the comma-separated fields to be used for descending sorting.",
+                "type": "text",
+                "name": "par_sort_desc",
+                "required": false,
+                "visible": true,
+                "editable": true,
+                "tooltip": "Specify the comma-separated fields to be used for descending sorting."
+              }
+            ]
+          }
+        },
+        {
+          "title": "Limit",
+          "description": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination.",
+          "type": "integer",
+          "name": "par_limit",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination."
+        },
+        {
+          "title": "Offset",
+          "description": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination.",
+          "type": "integer",
+          "name": "par_offset",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specifies how many records to omit before returning data. Should be paired with the \"Limit\" parameter for pagination."
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Fields": [
+            {
+              "Name": "",
+              "DataType": "",
+              "Caption": ""
+            }
+          ],
+          "Data": ""
+        }
+      }
+    },
+    {
+      "operation": "get_attachment_content",
+      "title": "Get Attachment Content",
+      "description": "Retrieve the base64-encoded content of a specific object attachment from Alloy Navigator Express.",
+      "category": "investigation",
+      "annotation": "get_attachment_content",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Identifier (OID)",
+          "description": "Specify the object identifier to retrieve attachment content from Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, or GUID)",
+          "type": "text",
+          "name": "oid",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the object identifier to retrieve attachment content from Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, or GUID)"
+        },
+        {
+          "title": "Attachment ID",
+          "description": "Specify the ID of the attachment to retrieve details from Alloy Navigator Express.",
+          "type": "text",
+          "name": "attachment_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the attachment to retrieve details from Alloy Navigator Express. Note: Attachment ID (GUID) obtained from \"List Object Attachments\" operation."
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "responseObject": {
+          "Data": "",
+          "FileName": "",
+          "Description": "",
+          "Size": ""
+        }
+      }
+    },
+    {
+      "operation": "download_attachment",
+      "title": "Download Attachment",
+      "description": "Download a specific object attachment from Alloy Navigator Express as binary data (base64-encoded for transfer).",
+      "category": "investigation",
+      "annotation": "download_attachment",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Identifier (OID)",
+          "description": "Specify the object identifier to download attachment from Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, or GUID)",
+          "type": "text",
+          "name": "oid",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the object identifier to download attachments from Alloy Navigator Express. Object identifier (e.g., T000027 for incidents, or GUID)"
+        },
+        {
+          "title": "Attachment ID",
+          "description": "Specify the ID of the attachment to retrieve details from Alloy Navigator Express.",
+          "type": "text",
+          "name": "attachment_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the ID of the attachment to retrieve details from Alloy Navigator Express. Note: Attachment ID (GUID) obtained from \"List Object Attachments\" operation."
+        },
+        {
+          "title": "Attachment Name",
+          "description": "Specify the custom name of the attachment for the FortiSOAR attachment record.",
+          "type": "text",
+          "name": "attachment_name",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the custom name of the attachment for the FortiSOAR attachment record."
+        },
+        {
+          "title": "Attachment Description",
+          "description": "Specify the custom description of the attachment for the FortiSOAR attachment record.",
+          "type": "text",
+          "name": "attachment_description",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the custom description of the attachment for the FortiSOAR attachment record."
+        },
+        {
+          "title": "Skip FortiSOAR Upload",
+          "description": "Select this option to download the file without uploading it to FortiSOAR.",
+          "type": "checkbox",
+          "name": "skip_fortisoar_upload",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": false,
+          "tooltip": "Select this option to download the file without uploading it to FortiSOAR."
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "message": "",
+        "download": {
+          "success": "",
+          "file_name": "",
+          "content_type": "",
+          "size": "",
+          "data": "",
+          "message": ""
+        },
+        "fortisoar_upload": {
+          "file_name": "",
+          "content_type": "",
+          "size": "",
+          "fortisoar_file_iri": "",
+          "fortisoar_attachment_iri": "",
+          "fortisoar_attachment_id": "",
+          "attachment_record": ""
+        }
+      }
+    },
+    {
+      "operation": "add_attachments",
+      "title": "Add Attachments",
+      "description": "Add file attachments or links from FortiSOAR to a specific Alloy Navigator object using its object ID.",
+      "category": "investigation",
+      "annotation": "add_attachments",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Identifier (OID)",
+          "description": "Specify the object ID for the Alloy Navigator record you want to attach a file to from FortiSOAR. Object identifier (e.g., T000027 for incidents, or GUID)",
+          "type": "text",
+          "name": "oid",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the object ID for the Alloy Navigator record you want to attach a file to from FortiSOAR. Object identifier (e.g., T000027 for incidents, or GUID)"
+        },
+        {
+          "title": "File or Attachment IRI",
+          "description": "Specify the type of file that you want to submit to Alloy Navigator Express. The type can be an Attachment ID or a File IRI.",
+          "type": "select",
+          "name": "path",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "value": "Attachment IRI",
+          "tooltip": "Specify the type of file that you want to submit to Alloy Navigator Express. The type can be an Attachment ID or a File IRI.",
+          "options": [
+            "Attachment IRI",
+            "File IRI"
+          ],
+          "onchange": {
+            "Attachment IRI": [
+              {
+                "title": "Attachment IRI",
+                "description": "Specify the attachment IRI based on which you want to submit attachment to Alloy Navigator Express.",
+                "name": "value",
+                "type": "text",
+                "required": false,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "tooltip": "Specify the attachment IRI based on which you want to submit attachment to Alloy Navigator Express.",
+                "onChangeParam": "File or Attachment IRI",
+                "onChangeOption": "Attachment IRI"
+              }
+            ],
+            "File IRI": [
+              {
+                "title": "File IRI",
+                "description": "Specify the file IRI based on which you want to submit attachment to Alloy Navigator Express.",
+                "name": "value",
+                "type": "text",
+                "required": false,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "tooltip": "Specify the file IRI based on which you want to submit attachment to Alloy Navigator Express.",
+                "onChangeParam": "File or Attachment IRI",
+                "onChangeOption": "File IRI"
+              }
+            ]
+          }
+        }
+      ],
+      "output_schema": {}
+    },
+    {
+      "operation": "remove_attachment",
+      "title": "Remove Attachment",
+      "description": "Remove a specific attachment from an Alloy Navigator object using the object ID and attachment ID you provided.",
+      "category": "investigation",
+      "annotation": "remove_attachment",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Identifier (OID)",
+          "description": "Specify the object ID of the Alloy Navigator record you want to remove the attachment from. Object identifier (e.g., T000027 for incidents, or GUID)",
+          "type": "text",
+          "name": "oid",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the object ID of the Alloy Navigator record you want to remove the attachment from. Object identifier (e.g., T000027 for incidents, or GUID)"
+        },
+        {
+          "title": "Attachment ID",
+          "description": "Specify the attachment ID for the item you want to remove from Alloy Navigator Express.",
+          "type": "text",
+          "name": "attachment_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the attachment ID for the item you want to remove from Alloy Navigator Express. Note: Attachment ID (GUID) obtained from \"List Object Attachments\" operation."
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "message": ""
+      }
+    },
+    {
+      "operation": "update_attachment_description",
+      "title": "Update Attachment Description",
+      "description": "Update the description of a specific attachment in Alloy Navigator Express using the object ID, attachment ID, and the new description you provided.",
+      "category": "investigation",
+      "annotation": "update_attachment_description",
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Object Identifier (OID)",
+          "description": "Specify the object ID of the Alloy Navigator record whose attachment description you want to update. Object identifier (e.g., T000027 for incidents, or GUID)",
+          "type": "text",
+          "name": "oid",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the object ID of the Alloy Navigator record whose attachment description you want to update. Object identifier (e.g., T000027 for incidents, or GUID)"
+        },
+        {
+          "title": "Attachment ID",
+          "description": "Specify the attachment ID of the Alloy Navigator record whose attachment description you want to update.",
+          "type": "text",
+          "name": "attachment_id",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the attachment ID of the Alloy Navigator record whose attachment description you want to update. Note: Attachment ID (GUID) obtained from \"List Object Attachments\" operation."
+        },
+        {
+          "title": "Description",
+          "description": "Specify the description of the Alloy Navigator record whose you want to update.",
+          "type": "text",
+          "name": "description",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "tooltip": "Specify the description of the Alloy Navigator record whose you want to update."
+        }
+      ],
+      "output_schema": {
+        "success": "",
+        "errorCode": "",
+        "errorText": "",
+        "message": ""
+      }
+    }
+  ]
+}

@@ -1,7 +1,26 @@
+"""
+Copyright start
+MIT License
+Copyright (c) 2025 Fortinet Inc
+Copyright end
+"""
+
 from connectors.core.connector import ConnectorError, get_logger
 import requests
+import arrow
+import urllib.parse
+import json
+import base64
+import mimetypes
+from os.path import join
 from .auth import AlloyAuth
 from .constants import LOGGER_NAME, ENDPOINTS
+
+try:
+    from integrations.crudhub import make_request, download_file_from_cyops
+    from integrations.crudhub import make_request, make_file_upload_request
+except:
+    pass
 
 logger = get_logger(LOGGER_NAME)
 
@@ -130,7 +149,7 @@ def check_health(config):
     """
     try:
         client = AlloyClient(config)
-        auth_type = config.get("auth_type", "Application account")
+        auth_type = config.get("auth_type", "Application Account")
 
         # Test authentication by getting a token
         token = client.auth.get_access_token()
@@ -138,18 +157,18 @@ def check_health(config):
         if not token:
             raise ConnectorError("Failed to obtain access token")
 
-        # For Application accounts, just verify token generation
-        if auth_type == "Application account":
+        # For Application Accounts, just verify token generation
+        if auth_type == "Application Account":
             return {
                 "status": "success",
-                "details": "Successfully authenticated with Alloy Navigator Express API using Application account",
+                "details": "Successfully authenticated with Alloy Navigator Express API using Application Account",
                 "server_url": client.server_url,
                 "token_obtained": True,
                 "auth_type": auth_type
             }
 
         # For Technician accounts, test with profile endpoint
-        elif auth_type == "Technician account":
+        elif auth_type == "Technician Account":
             url = f"{client.server_url}{ENDPOINTS['profile']}"
             headers = client.auth.get_auth_header()
             headers.update({
@@ -277,15 +296,14 @@ def get_objects(config, params):
     if filters:
         try:
             if isinstance(filters, str):
-                import json
-                filter_dict = json.loads(filters)
+                filter_dict = [item.strip() for item in filters.split(",")]
             else:
                 filter_dict = filters
 
             # Add each filter as query parameter
             for key, value in filter_dict.items():
                 query_params[key] = value
-        except Exception as e:
+        except json.JSONDecodeError as e:
             raise ConnectorError(f"Invalid filters JSON format: {str(e)}")
 
     # Make API request
@@ -345,8 +363,7 @@ def get_objects_advanced(config, params):
     if fields:
         try:
             if isinstance(fields, str):
-                import json
-                fields_list = json.loads(fields)
+                fields_list = [item.strip() for item in fields.split(",")]
             else:
                 fields_list = fields
 
@@ -362,8 +379,7 @@ def get_objects_advanced(config, params):
     if filters:
         try:
             if isinstance(filters, str):
-                import json
-                filters_list = json.loads(filters)
+                filters_list = [item.strip() for item in filters.split(",")]
             else:
                 filters_list = filters
 
@@ -377,7 +393,8 @@ def get_objects_advanced(config, params):
                     # Validate operation
                     valid_ops = ["=", "<>", ">", ">=", "<", "<="]
                     if f["operation"] not in valid_ops:
-                        raise ConnectorError(f"Invalid operation '{f['operation']}'. Must be one of: {', '.join(valid_ops)}")
+                        raise ConnectorError(
+                            f"Invalid operation '{f['operation']}'. Must be one of: {', '.join(valid_ops)}")
 
                 post_body["filters"] = filters_list
             else:
@@ -390,8 +407,7 @@ def get_objects_advanced(config, params):
     if sort:
         try:
             if isinstance(sort, str):
-                import json
-                sort_list = json.loads(sort)
+                sort_list = [item.strip() for item in sort.split(",")]
             else:
                 sort_list = sort
 
@@ -532,7 +548,7 @@ def get_object_activities(config, params):
 
     # Add optional parameters if provided
     optional_params = [
-        "par_fields", "par_sort_asc", "par_sort_desc", 
+        "par_fields", "par_sort_asc", "par_sort_desc",
         "par_limit", "par_offset"
     ]
 
@@ -546,15 +562,14 @@ def get_object_activities(config, params):
     if filters:
         try:
             if isinstance(filters, str):
-                import json
-                filter_dict = json.loads(filters)
+                filter_dict = [item.strip() for item in filters.split(",")]
             else:
                 filter_dict = filters
 
             # Add each filter as query parameter
             for key, value in filter_dict.items():
                 query_params[key] = value
-        except Exception as e:
+        except json.JSONDecodeError as e:
             raise ConnectorError(f"Invalid filters JSON format: {str(e)}")
 
     # Build endpoint with object identifier
@@ -623,8 +638,7 @@ def get_object_activities_advanced(config, params):
     if fields:
         try:
             if isinstance(fields, str):
-                import json
-                fields_list = json.loads(fields)
+                fields_list = [item.strip() for item in fields.split(",")]
             else:
                 fields_list = fields
 
@@ -640,8 +654,7 @@ def get_object_activities_advanced(config, params):
     if filters:
         try:
             if isinstance(filters, str):
-                import json
-                filters_list = json.loads(filters)
+                filters_list = [item.strip() for item in filters.split(",")]
             else:
                 filters_list = filters
 
@@ -655,7 +668,8 @@ def get_object_activities_advanced(config, params):
                     # Validate operation
                     valid_ops = ["=", "<>", ">", ">=", "<", "<="]
                     if f["operation"] not in valid_ops:
-                        raise ConnectorError(f"Invalid operation '{f['operation']}'. Must be one of: {', '.join(valid_ops)}")
+                        raise ConnectorError(
+                            f"Invalid operation '{f['operation']}'. Must be one of: {', '.join(valid_ops)}")
 
                 post_body["filters"] = filters_list
             else:
@@ -668,8 +682,7 @@ def get_object_activities_advanced(config, params):
     if sort:
         try:
             if isinstance(sort, str):
-                import json
-                sort_list = json.loads(sort)
+                sort_list = [item.strip() for item in sort.split(",")]
             else:
                 sort_list = sort
 
@@ -775,7 +788,7 @@ def get_classification_values(config, params):
 
     # Add optional parameters if provided
     optional_params = [
-        "par_fields", "par_sort_asc", "par_sort_desc", 
+        "par_fields", "par_sort_asc", "par_sort_desc",
         "par_limit", "par_offset"
     ]
 
@@ -789,15 +802,14 @@ def get_classification_values(config, params):
     if filters:
         try:
             if isinstance(filters, str):
-                import json
-                filter_dict = json.loads(filters)
+                filter_dict = [item.strip() for item in filters.split(",")]
             else:
                 filter_dict = filters
 
             # Add each filter as query parameter
             for key, value in filter_dict.items():
                 query_params[key] = value
-        except Exception as e:
+        except json.JSONDecodeError as e:
             raise ConnectorError(f"Invalid filters JSON format: {str(e)}")
 
     # Build endpoint for Dictionary API
@@ -881,8 +893,7 @@ def get_classification_values_advanced(config, params):
     if fields:
         try:
             if isinstance(fields, str):
-                import json
-                fields_list = json.loads(fields)
+                fields_list = [item.strip() for item in fields.split(",")]
             else:
                 fields_list = fields
 
@@ -898,8 +909,7 @@ def get_classification_values_advanced(config, params):
     if filters:
         try:
             if isinstance(filters, str):
-                import json
-                filters_list = json.loads(filters)
+                filters_list = [item.strip() for item in fields.split(",")]
             else:
                 filters_list = filters
 
@@ -913,7 +923,8 @@ def get_classification_values_advanced(config, params):
                     # Validate operation
                     valid_ops = ["=", "<>", ">", ">=", "<", "<="]
                     if f["operation"] not in valid_ops:
-                        raise ConnectorError(f"Invalid operation '{f['operation']}'. Must be one of: {', '.join(valid_ops)}")
+                        raise ConnectorError(
+                            f"Invalid operation '{f['operation']}'. Must be one of: {', '.join(valid_ops)}")
 
                 post_body["filters"] = filters_list
             else:
@@ -926,8 +937,7 @@ def get_classification_values_advanced(config, params):
     if sort:
         try:
             if isinstance(sort, str):
-                import json
-                sort_list = json.loads(sort)
+                sort_list = [item.strip() for item in sort.split(",")]
             else:
                 sort_list = sort
 
@@ -975,7 +985,8 @@ def get_classification_values_advanced(config, params):
         if "unknown class" in error_text.lower() or "Requested object is of unknown class" in error_text:
             raise ConnectorError(f"Object class '{object_class}' not found in the system")
         elif "unknown" in error_text.lower() and "field" in error_text.lower():
-            raise ConnectorError(f"Reference field '{ref_field}' not found for object class '{object_class}'. Common field names: Status, Priority, Type, Category")
+            raise ConnectorError(
+                f"Reference field '{ref_field}' not found for object class '{object_class}'. Common field names: Status, Priority, Type, Category")
         elif "permissions" in error_text.lower() or "access" in error_text.lower() or "Authorization has been denied" in error_text:
             raise ConnectorError(f"Insufficient permissions to access classification values")
         else:
@@ -1020,8 +1031,7 @@ def create_object(config, params):
         # Parse fields if provided as JSON string
         if isinstance(fields, str):
             try:
-                import json
-                fields_dict = json.loads(fields)
+                fields_dict = [item.strip() for item in fields.split(",")]
             except json.JSONDecodeError as e:
                 raise ConnectorError(f"Invalid fields JSON format: {str(e)}")
         else:
@@ -1034,19 +1044,19 @@ def create_object(config, params):
     # Add individual fields to fields_dict
     if params.get("summary"):
         fields_dict["Summary"] = params.get("summary")
-        
+
     if params.get("description"):
         fields_dict["Description"] = params.get("description")
-        
+
     if params.get("category"):
         fields_dict["Category"] = params.get("category")
-        
+
     if params.get("requester"):
         fields_dict["Requester"] = params.get("requester")
-        
+
     if params.get("urgency"):
         fields_dict["Urgency"] = params.get("urgency")
-        
+
     if params.get("impact"):
         fields_dict["Impact"] = params.get("impact")
 
@@ -1088,7 +1098,8 @@ def create_object(config, params):
         elif "action's condition is not satisfied" in error_text or "not authorized" in error_text.lower():
             raise ConnectorError(f"User is not authorized to execute Create Action ID {action_id}")
         elif "action is not available" in error_text.lower() or "not found" in error_text.lower():
-            raise ConnectorError(f"Create Action ID {action_id} not found. Check Settings App: Workflow > Actions > Create Actions")
+            raise ConnectorError(
+                f"Create Action ID {action_id} not found. Check Settings App: Workflow > Actions > Create Actions")
         elif "Field" in error_text and "unknown" in error_text.lower():
             raise ConnectorError(f"API error: {error_text}. Check field names match display labels")
         else:
@@ -1178,7 +1189,7 @@ def check_step_action_availability(config, params):
 
     result["action_available"] = is_available
     result["availability_message"] = (
-        f"Step Action {action_id} is available for object {oid}" if is_available 
+        f"Step Action {action_id} is available for object {oid}" if is_available
         else f"Step Action {action_id} is not available for object {oid}"
     )
 
@@ -1241,8 +1252,7 @@ def run_step_action(config, params):
         # Parse fields if provided as JSON string
         if isinstance(fields, str):
             try:
-                import json
-                fields_dict = json.loads(fields)
+                fields_dict = [item.strip() for item in fields.split(",")]
             except json.JSONDecodeError as e:
                 raise ConnectorError(f"Invalid fields JSON format: {str(e)}")
         else:
@@ -1255,19 +1265,19 @@ def run_step_action(config, params):
     # Add individual fields to fields_dict
     if params.get("summary"):
         fields_dict["Summary"] = params.get("summary")
-        
+
     if params.get("description"):
         fields_dict["Description"] = params.get("description")
-        
+
     if params.get("category"):
         fields_dict["Category"] = params.get("category")
-        
+
     if params.get("requester"):
         fields_dict["Requester"] = params.get("requester")
-        
+
     if params.get("urgency"):
         fields_dict["Urgency"] = params.get("urgency")
-        
+
     if params.get("impact"):
         fields_dict["Impact"] = params.get("impact")
 
@@ -1305,7 +1315,8 @@ def run_step_action(config, params):
             if "Object" in error_text:
                 raise ConnectorError(f"Object '{oid}' not found in the system")
             elif "action" in error_text.lower():
-                raise ConnectorError(f"Step Action ID {action_id} not found. Check Settings App: Workflow > Actions > Step Actions")
+                raise ConnectorError(
+                    f"Step Action ID {action_id} not found. Check Settings App: Workflow > Actions > Step Actions")
             else:
                 raise ConnectorError(f"API error: {error_text}")
         elif "Field" in error_text and "unknown" in error_text.lower():
@@ -1373,15 +1384,14 @@ def list_object_attachments(config, params):
     if filters:
         try:
             if isinstance(filters, str):
-                import json
-                filter_dict = json.loads(filters)
+                filter_dict = [item.strip() for item in filters.split(",")]
             else:
                 filter_dict = filters
 
             # Add each filter as query parameter
             for key, value in filter_dict.items():
                 query_params[key] = value
-        except Exception as e:
+        except json.JSONDecodeError as e:
             raise ConnectorError(f"Invalid filters JSON format: {str(e)}")
 
     # Build endpoint
@@ -1493,9 +1503,6 @@ def download_attachment(config, params):
         - Automatically uploads to FortiSOAR attachment module unless skip_fortisoar_upload=True
         - Returns both download response and FortiSOAR attachment record
     """
-    import base64
-    import arrow
-    import urllib.parse
 
     client = AlloyClient(config)
 
@@ -1567,7 +1574,6 @@ def download_attachment(config, params):
             # Upload to FortiSOAR if not skipped
             if not skip_fortisoar_upload:
                 try:
-                    from integrations.crudhub import make_request, make_file_upload_request
 
                     # Clean filename
                     clean_file_name = urllib.parse.unquote(file_name)
@@ -1664,11 +1670,7 @@ def add_attachments(config, params):
         - Requires Modify access permission on the object
         - Retrieves file from FortiSOAR and uploads to Alloy Navigator
     """
-    import base64
-    import mimetypes
-    from os.path import join
-    from integrations.crudhub import make_request, download_file_from_cyops
-    
+
     client = AlloyClient(config)
 
     # Validate required parameters
@@ -1706,7 +1708,7 @@ def add_attachments(config, params):
         file_download_response = download_file_from_cyops(file_iri)
         file_name = file_download_response['filename']
         file_path = join('/tmp', file_download_response['cyops_file_path'])
-        
+
         logger.info(f"Retrieved file: {file_name} from path: {file_path}")
 
         # Determine mime type
@@ -1836,7 +1838,7 @@ def remove_attachment(config, params):
     # Add success message
     result["message"] = f"Successfully removed attachment {attachment_id} from object {oid}"
 
-    return result    
+    return result
 
 
 def update_attachment_description(config, params):

@@ -1,3 +1,10 @@
+"""
+Copyright start
+MIT License
+Copyright (c) 2025 Fortinet Inc
+Copyright end
+"""
+
 import requests
 import time
 import threading
@@ -27,7 +34,7 @@ class AlloyAuth:
             config (dict): Connector configuration
         """
         self.server_url = config.get("server_url", "").rstrip("/")
-        self.auth_type = config.get("auth_type", "Application account")
+        self.auth_type = config.get("auth_type", "Application Account")
         self.verify_ssl = config.get("verify_ssl")
 
         # Validate required configuration based on auth type
@@ -39,12 +46,12 @@ class AlloyAuth:
             raise ConnectorError("server_url must start with http:// or https://")
 
         # Initialize credentials based on authentication type
-        if self.auth_type == "Application account":
+        if self.auth_type == "Application Account":
             self.client_id = config.get("client_id")
             self.client_secret = config.get("client_secret")
 
             if not self.client_id or not self.client_secret:
-                raise ConnectorError("Missing required configuration for Application account: client_id, client_secret")
+                raise ConnectorError("Missing required configuration for Application Account: client_id, client_secret")
 
             if not isinstance(self.client_id, str) or not self.client_id.strip():
                 raise ConnectorError("client_id must be a non-empty string")
@@ -52,12 +59,12 @@ class AlloyAuth:
             if not isinstance(self.client_secret, str) or not self.client_secret.strip():
                 raise ConnectorError("client_secret must be a non-empty string")
 
-        elif self.auth_type == "Technician account":
+        elif self.auth_type == "Technician Account":
             self.username = config.get("username")
             self.password = config.get("password")
 
             if not self.username or not self.password:
-                raise ConnectorError("Missing required configuration for Technician account: username, password")
+                raise ConnectorError("Missing required configuration for Technician Account: username, password")
 
             if not isinstance(self.username, str) or not self.username.strip():
                 raise ConnectorError("username must be a non-empty string")
@@ -66,7 +73,8 @@ class AlloyAuth:
                 raise ConnectorError("password must be a non-empty string")
 
         else:
-            raise ConnectorError(f"Invalid auth_type: {self.auth_type}. Must be 'Application account' or 'Technician account'")
+            raise ConnectorError(
+                f"Invalid auth_type: {self.auth_type}. Must be 'Application Account' or 'Technician Account'")
 
     def _get_cached_token(self):
         """
@@ -118,20 +126,20 @@ class AlloyAuth:
         url = f"{self.server_url}/token"
 
         # Build payload based on authentication type
-        if self.auth_type == "Application account":
+        if self.auth_type == "Application Account":
             payload = {
                 "grant_type": "client_credentials",
                 "client_id": self.client_id,
                 "client_secret": self.client_secret
             }
-            logger.debug("Requesting new Alloy Navigator Express token (Application account)")
-        else:  # Technician account
+            logger.debug("Requesting new Alloy Navigator Express token (Application Account)")
+        else:  # Technician Account
             payload = {
                 "grant_type": "password",
                 "username": self.username,
                 "password": self.password
             }
-            logger.debug("Requesting new Alloy Navigator Express token (Technician account)")
+            logger.debug("Requesting new Alloy Navigator Express token (Technician Account)")
 
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
@@ -151,7 +159,7 @@ class AlloyAuth:
                     error_type = error_data.get("error", "unknown_error")
 
                     if error_type == "unsupported_grant_type":
-                        expected_grant = "client_credentials" if self.auth_type == "Application account" else "password"
+                        expected_grant = "client_credentials" if self.auth_type == "Application Account" else "password"
                         raise ConnectorError(f"Invalid grant_type, must be '{expected_grant}'")
                     elif error_type == "invalid_grant":
                         raise ConnectorError("Incorrect username or password")
@@ -232,7 +240,7 @@ class AlloyAuth:
         with _cache_lock:
             current_time = time.time()
             expired_keys = [
-                key for key, data in _token_cache.items() 
+                key for key, data in _token_cache.items()
                 if current_time >= data.get("expires_at", 0)
             ]
             for key in expired_keys:
